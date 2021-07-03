@@ -1,0 +1,12 @@
+{
+    "name": "jamessaget/basekit_test",
+    "authors": [
+        {
+            "name": "jsaget",
+            "email": "james@fanatic.co.uk"
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    }
+}
