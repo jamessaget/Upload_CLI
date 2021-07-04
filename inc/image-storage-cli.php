@@ -19,17 +19,22 @@ class ImageStorageCLI {
     ];
 
     private $methods = [
-        'add' => 'store_img',
-        'get' => 'get_img',
-        'remove' => 'delete_img',
+        'add' => [
+            'method' => 'store_img',
+            'message' => 'Please enter an image path to be stored',
+            'retrieval' => false
+        ],
+        'get' => [
+            'method' => 'get_img',
+            'message' => 'Please enter an image path to be stored',
+            'retrieval' => true
+        ],
+        'remove' => [
+            'method' => 'delete_img',
+            'message' => 'Please enter an image filename to be deleted',
+            'retrieval' => true
+        ]
     ];
-
-    private $messages = [
-        'add' => 'Please enter an image path to be stored',
-        'get' => 'Please enter an image filename to be retreived',
-        'remove' => 'Please enter an image filename to be deleted',
-    ];
-
 
     public function __construct(
         private StorageDriver $storage_driver,
@@ -40,9 +45,10 @@ class ImageStorageCLI {
 
     private function cli_initialize(){
         try {
-            $action = $this->methods[$this->option] ?? '';
+            $action = $this->methods[$this->option]['method'] ?? '';
             if($action && is_callable(array($this, $action))){
-                $this->image_read($this->messages[$this->option]);
+                $this->retrieval = $this->methods[$this->option]['retrieval'];
+                $this->image_read($this->methods[$this->option]['message']);
                 $this->$action();
             }
         } catch (\Exception $ex ){
