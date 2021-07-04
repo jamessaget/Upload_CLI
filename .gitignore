@@ -2,4 +2,4 @@
 /vendor/
 .phpunit.result.cache
 debug.log
-/storage
+/storage/*
