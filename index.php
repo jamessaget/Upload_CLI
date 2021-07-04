@@ -12,10 +12,6 @@ use Monolog\Handler\StreamHandler;
 // Written as interchangeable module
 // Using a PSR-3 compliant logger
 
-// Remaining tasks:
-// REFACTOR IF ELSE part of cli_initialize
-// Review code style and refactor any remaining
-
 // Define & get flags passed to console
 $option = getopt('', [ 
     'add',
