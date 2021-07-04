@@ -30,10 +30,11 @@ if(count($option) == 1){
     // Setup Logger
     $log = new Logger('CLI Log');
     $log->pushHandler(new StreamHandler(__DIR__.'/debug.log', Logger::DEBUG));
+    set_error_handling($log);
 
     // Setup LocalStorageDriver Class 
     $storage_driver = new LocalStorageDriver($log);
-    
+
     // Initialize CLI
-    $storage_cli = new ImageStorageCLI($storage_driver, $option[0], $log);
+    $storage_cli = new ImageStorageCLI($storage_driver, $option[0]);
 }

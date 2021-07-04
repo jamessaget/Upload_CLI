@@ -1,45 +1,49 @@
 
 <?php
 
-use Monolog\Logger;
-
 class ImageStorageCLI {
 
     private $image_input;
+
     private $image_name;
+
     private $retrieval = false;
+
     private $image;
+
     private $image_type;
+
     private $accepted_types = [
-        /*'IMAGETYPE_JPEG'*/ 
-        '2' => '.jpeg',
-        /* 'IMAGETYPE_PNG' */
-        '3' => '.png',
+        '2' => '.jpeg', /*'IMAGETYPE_JPEG'*/ 
+        '3' => '.png', /* 'IMAGETYPE_PNG' */
     ];
+
+    private $methods = [
+        'add' => 'store_img',
+        'get' => 'get_img',
+        'remove' => 'delete_img',
+    ];
+
+    private $messages = [
+        'add' => 'Please enter an image path to be stored',
+        'get' => 'Please enter an image filename to be retreived',
+        'remove' => 'Please enter an image filename to be deleted',
+    ];
+
 
     public function __construct(
         private StorageDriver $storage_driver,
         private string $option,
-        private Logger $logger,
     ) {
         $this->cli_initialize();
     }
 
     private function cli_initialize(){
-        // REFACTOR IF ELSE
-        // depending on $option passed define message
         try {
-            if($this->option == 'add'){
-                $this->image_read("Please enter an image path to be stored");
-                $this->store_img();
-            } else if($this->option == 'get'){
-                $this->retrieval = true;
-                $this->image_read("Please enter an image filename to be retreived");
-                $this->get_img();
-            } else if($this->option == 'remove'){
-                $this->retrieval = true;
-                $this->image_read("Please enter an image filename to be deleted");
-                $this->delete_img();
+            $action = $this->methods[$this->option] ?? '';
+            if($action && is_callable(array($this, $action))){
+                $this->image_read($this->messages[$this->option]);
+                $this->$action();
             }
         } catch (\Exception $ex ){
             if(str_contains($ex->getMessage(), 'errno=21') || str_contains(strtolower($ex->getMessage()), 'no such file or directory')){
@@ -47,7 +51,6 @@ class ImageStorageCLI {
             } else {
                 echo $ex->getMessage();
             }
-            $this->logger->debug($ex->getMessage(), ['user' => get_current_user()]);
         }
     }
 

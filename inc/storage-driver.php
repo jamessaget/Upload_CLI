@@ -19,7 +19,6 @@ Class LocalStorageDriver implements StorageDriver {
             $this->logger->info('Image stored at path: ' . $this->directory . $name);
         } catch (\Exception $ex){
             echo $ex->getMessage();
-            $this->logger->debug($ex->getMessage(), ['user' => get_current_user()]);
         }
     }
 
@@ -39,7 +38,6 @@ Class LocalStorageDriver implements StorageDriver {
             $this->logger->info('Image deleted at path: ' . $path);
         } catch (\Exception $ex){
             echo $ex->getMessage();
-            $this->logger->debug($ex->getMessage(), ['user' => get_current_user()]);
         }
     }
 }
