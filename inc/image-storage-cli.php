@@ -56,7 +56,7 @@ class ImageStorageCLI {
 
     private function image_read($message){
         echo $message . PHP_EOL;
-        $handle = fopen ("php://stdin","r");
+        $handle = fopen ("php://stdin", "r");
         $line = fgets($handle);
 
         $this->retrieval ? $this->cli_validation('./storage/' . $line) : $this->cli_validation($line);

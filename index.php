@@ -6,12 +6,6 @@ require 'vendor/autoload.php';
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
-// TASK OBJECTIVES:
-// Basic validation on the image
-// Storage, retrieval and deletion
-// Written as interchangeable module
-// Using a PSR-3 compliant logger
-
 // Define & get flags passed to console
 $option = getopt('', [ 
     'add',
