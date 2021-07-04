@@ -1,9 +1,7 @@
 
 <?php
 
-// Image storage
-// Image is provided/injected
-//  PS3 compliant logger
+use Monolog\Logger;
 
 class ImageStorageCLI {
 
@@ -13,15 +11,16 @@ class ImageStorageCLI {
     private $image;
     private $image_type;
     private $accepted_types = [
-        /*'IMAGETYPE_PNG'*/ 
-        '2' => '.png',
-        /* 'IMAGETYPE_JPEG' */
-        '3' => '.jpeg',
+        /*'IMAGETYPE_JPEG'*/ 
+        '2' => '.jpeg',
+        /* 'IMAGETYPE_PNG' */
+        '3' => '.png',
     ];
 
     public function __construct(
         private StorageDriver $storage_driver,
-        private string $option
+        private string $option,
+        private Logger $logger,
     ) {
         $this->cli_initialize();
     }
@@ -48,27 +47,41 @@ class ImageStorageCLI {
             } else {
                 echo $ex->getMessage();
             }
+            $this->logger->debug($ex->getMessage(), ['user' => get_current_user()]);
         }
     }
 
     private function image_read($message){
-        // "Please enter an image path to be uploaded"
         echo $message . PHP_EOL;
         $handle = fopen ("php://stdin","r");
         $line = fgets($handle);
-        $this->cli_validation($line);
 
-        // POTENTIAL REFACTOR VALIDATING DRY
-        if($this->retrieval) {
-            $image_file = file_get_contents('./storage/ ' . $this->image_input);
-            if($image_file === FALSE) throw new ErrorException("\e[0;31mUnable to locate image, please review the provided filename " . $this->image_input . "\e[0m\n");
-            $this->image = $image_file;
-        } else {
-            $image_file = file_get_contents($this->image_input);
-            if($image_file === FALSE) throw new ErrorException("\e[0;31mUnable to locate image, please review the provided path " . $this->image_input . "\e[0m\n");
-            $this->image = $image_file;
-        }
+        $this->retrieval ? $this->cli_validation('./storage/' . $line) : $this->cli_validation($line);
+        $image_file = file_get_contents($this->image_input);
+        if($image_file === FALSE) throw new ErrorException("\e[0;31mUnable to locate image, please review the provided path or filename " . $this->image_input . "\e[0m\n");
+        $this->image = $image_file;
         $this->get_image_name();
+    }
+
+    private function cli_validation($image){
+        $image_type = exif_imagetype(trim($image));
+        if(!$image_type || !in_array($image_type, array_keys($this->accepted_types))){
+            throw new ErrorException("\e[0;31mFile provided is not an accepted image type please review filetype " . $image . "\e[0m\n");
+        } 
+        $this->image_type = $this->accepted_types[$image_type];
+        $this->image_input = trim($image);
+    }
+
+    private function store_img(){
+        $this->storage_driver->store_img($this->image, $this->image_name);
+    }
+
+    public function get_img(){
+        $this->storage_driver->get_img($this->image);
+    }
+
+    public function delete_img(){
+        $this->storage_driver->delete_img($this->image_input);
     }
 
     private function get_image_name(){
@@ -78,37 +91,5 @@ class ImageStorageCLI {
            $this->image_name = basename($this->image_input, ".php");
         }
     }
-
-    private function cli_validation($image){
-
-        $image_type = exif_imagetype(trim($image));
-        if(!$image_type || !in_array($image_type, array_keys($this->accepted_types))){
-            throw new ErrorException("\e[0;31mFile provided is not an accepted image type please review filetype " . $image . "\e[0m\n");
-        } 
-        $this->image_type = $this->accepted_types[$image_type];
-        $this->image_input = trim($image);
-    }
-
-    // temporary testing function
-    public function get_img_path(){
-        echo $this->img_input;
-    }
-
-    private function store_img(){
-        $this->storage_driver->store_img($this->image, $this->image_type, $this->image_name);
-    }
-
-    public function get_img(){
-        $this->storage_driver->get_img($this->image);
-    }
-
-    public function delete_img(){
-        $this->storage_driver->delete_img($this->image);
-    }
-
-}
-
-// swap out FS storage for S3 BUCKET
-interface StorageMethod {
 
 }

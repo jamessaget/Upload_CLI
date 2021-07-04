@@ -1,0 +1,5 @@
+[2021-07-04T16:28:44.389080+00:00] CLI Log.DEBUG: exif_imagetype(./images/test-image-1.png): Failed to open stream: No such file or directory [] []
+[2021-07-04T16:29:13.465490+00:00] CLI Log.INFO: Image stored at path: ./storage/test-image.png [] []
+[2021-07-04T16:32:05.694721+00:00] CLI Log.INFO: Image deleted at path: ./storage/test-image.png [] []
+[2021-07-04T16:32:28.923433+00:00] CLI Log.DEBUG: [0;31mFile provided is not an accepted image type please review filetype ./images/test-gif.gif [0m  {"user":"jamessaget"} []
+[2021-07-04T16:33:06.789358+00:00] CLI Log.DEBUG: [0;31mFile provided is not an accepted image type please review filetype ./images/test-gif.gif [0m  {"user":"jamessaget"} []
