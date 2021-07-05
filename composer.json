@@ -10,9 +10,9 @@
         "phpunit/phpunit": "^9.5"
     },
     "autoload" : {
-        "classmap": [
-            "inc"
-        ]
+        "psr-4" : {
+            "App\\": "src/"
+        }
     },
     "require": {
         "monolog/monolog": "^2.2"

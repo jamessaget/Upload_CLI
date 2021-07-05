@@ -1,10 +1,11 @@
 <?php 
-
-require './config.php';
-require 'vendor/autoload.php';
+require './vendor/autoload.php';
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+use App\Classes\ImageStorageCli;
+use App\Classes\LocalStorageDriver;
+use App\Config\ConfigOptions;
 
 // Define & get flags passed to console
 $option = getopt('', [ 
@@ -20,7 +21,7 @@ if(count($option) == 1){
     // Setup Logger
     $log = new Logger('CLI Log');
     $log->pushHandler(new StreamHandler(__DIR__.'/debug.log', Logger::DEBUG));
-    set_error_handling($log);
+    new ConfigOptions($log);
 
     // Setup LocalStorageDriver Class 
     $storage_driver = new LocalStorageDriver($log);

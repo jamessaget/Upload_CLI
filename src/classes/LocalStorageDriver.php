@@ -1,6 +1,10 @@
 <?php
 
+namespace App\Classes;
+
+use App\Interfaces\StorageDriver;
 use Monolog\Logger;
+use ErrorException;
 
 Class LocalStorageDriver implements StorageDriver {
 
@@ -10,7 +14,7 @@ Class LocalStorageDriver implements StorageDriver {
         private Logger $logger,
     ){}
 
-    public function store_img($file, $name){
+    public function storeImg(string $file, string $name){
         echo 'Storing image...' . PHP_EOL;
         try {
             $store_file = file_put_contents($this->directory . $name, $file);
@@ -22,14 +26,14 @@ Class LocalStorageDriver implements StorageDriver {
         }
     }
 
-    public function get_img($file){
+    public function getImg(string $file){
         $this->logger->info('Image requested ' . $file);
         echo 'Binary image below:' . PHP_EOL;
         echo $file;
         
     }
 
-    public function delete_img($path){
+    public function deleteImg(string $path){
         echo 'Deleting image...' . PHP_EOL;
         try {
             $delete_file = unlink($path);
@@ -40,13 +44,4 @@ Class LocalStorageDriver implements StorageDriver {
             echo $ex->getMessage();
         }
     }
-}
-
-interface StorageDriver {
-
-    public function store_img($file, $name);
-
-    public function get_img($file);
-
-    public function delete_img($file);
 }
