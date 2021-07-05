@@ -11,8 +11,6 @@ class ImageStorageCLI {
 
     private $image;
 
-    private $image_type;
-
     private $accepted_types = [
         '2' => '.jpeg', /*'IMAGETYPE_JPEG'*/ 
         '3' => '.png', /* 'IMAGETYPE_PNG' */
@@ -81,6 +79,14 @@ class ImageStorageCLI {
         $this->image_input = trim($image);
     }
 
+    private function get_image_name(){
+        if($this->retrieval) { 
+            $this->image_name = $this->image_input;
+        } else {
+           $this->image_name = basename($this->image_input, ".php");
+        }
+    }
+    
     private function store_img(){
         $this->storage_driver->store_img($this->image, $this->image_name);
     }
@@ -91,14 +97,6 @@ class ImageStorageCLI {
 
     public function delete_img(){
         $this->storage_driver->delete_img($this->image_input);
-    }
-
-    private function get_image_name(){
-        if($this->retrieval) { 
-            $this->image_name = $this->image_input;
-        } else {
-           $this->image_name = basename($this->image_input, ".php");
-        }
     }
 
 }
