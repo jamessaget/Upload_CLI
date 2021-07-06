@@ -7,20 +7,20 @@ use App\Interfaces\StorageDriver;
 
 class ImageStorageCli {
 
-    private $image_input;
+    private string $image_input;
 
-    private $image_name;
+    private string $image_name;
 
-    private $image;
+    private  string $image;
 
-    private $retrieval = false;
+    private bool $retrieval = false;
 
-    private $accepted_types = [
+    private array $accepted_types = [
         '2' => '.jpeg', /*'IMAGETYPE_JPEG'*/ 
         '3' => '.png', /* 'IMAGETYPE_PNG' */
     ];
 
-    private $methods = [
+    private array $methods = [
         'add' => [
             'method' => 'storeImg',
             'message' => 'Please enter an image path to be stored',
