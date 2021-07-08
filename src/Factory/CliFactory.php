@@ -19,8 +19,9 @@ class CliFactory {
             switch($storage_driver) {
                 case 'local': 
                     $storage_driver = new LocalStorageDriver($log);
+                    break;
                 default:
-                    throw new ErrorException('Storage driver not found');
+                    throw new ErrorException("\e[0;31mStorage driver not found\e[0m\n");
             }    
         } catch(\Exception $ex){
             echo $ex->getMessage();
